@@ -3,13 +3,14 @@ from .base_agent import BaseAgent
 import time
 
 class AnalystAgent(BaseAgent):
-    def __init__(self, name, blackboard):
-        super().__init__(name, "analyst", blackboard)
+    def __init__(self, name, blackboard, kernel=None):
+        super().__init__(name, "analyst", blackboard, kernel=kernel)
 
     def execute(self, task):
-        print(f"[ANALYST {self.name}] Parsing session data for final report...")
+        self.log(f"[ANALYST_{self.name}] AGGREGATING SESSION DATA FROM NEURAL BLACKBOARD...")
         time.sleep(3)
-        data = self.blackboard.get_all()
-        report = f"Session Report: {len(data)} observations recorded."
+        data = self.blackboard.storage
+        report = f"ZENITH_REPORT: {len(data)} VECTOR_POINTS_ANALYZED // MISSION_TARGET: {task.get('target', 'UNKNOWN')}"
         self.blackboard.post("final_report", report, self.name)
-        print(f"[ANALYST {self.name}] Report generated.")
+        self.log(f"[ANALYST_{self.name}] ANALYSIS_COMPLETED // REPORT_STREAMED_TO_BLACKBOARD")
+        self.log(f"[ANALYST_{self.name}] {report}")

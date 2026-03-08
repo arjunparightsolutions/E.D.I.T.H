@@ -113,7 +113,7 @@ class EdithAgent:
                         unit_type = args.get("type")
                         name = args.get("name")
                         try:
-                            agent = AgentFactory.create_agent(unit_type, name, self.blackboard)
+                            agent = AgentFactory.create_agent(unit_type, name, self.blackboard, kernel=self.terminal_bridge)
                             self.swarm_engine.register_agent(agent)
                             self.messages.append({
                                 "role": "tool", "tool_call_id": tool_call.id,

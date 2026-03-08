@@ -377,6 +377,7 @@ class EdithApp(QMainWindow):
         
         self.pty = None
         self.alive = False
+        self.term_lock = threading.Lock()
 
     def init_main_ui(self):
         self.main_view = QWidget()
@@ -642,12 +643,13 @@ class EdithApp(QMainWindow):
             self.swarm_list.setItemWidget(item, widget)
 
     def execute(self, cmd):
-        self.set_agent_status("EXECUTING")
-        self.exec_preview.setText(f"> {cmd}")
-        self.exec_preview.setStyleSheet("color: #00FF41; font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 900;")
-        self.send_to_pty(cmd + "\r\n")
-        time.sleep(1.5)
-        return self.get_screen()
+        with self.term_lock:
+            self.set_agent_status("EXECUTING")
+            self.exec_preview.setText(f"> {cmd}")
+            self.exec_preview.setStyleSheet("color: #00FF41; font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 900;")
+            self.send_to_pty(cmd + "\r\n")
+            time.sleep(2.0)
+            return self.get_screen()
 
     def get_screen(self): 
         lines = ["".join(self.terminal.screen.buffer[row][col].data for col in range(self.terminal.screen.columns))

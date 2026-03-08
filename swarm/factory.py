@@ -6,7 +6,7 @@ from .analyst_agent import AnalystAgent
 
 class AgentFactory:
     @staticmethod
-    def create_agent(agent_type, name, blackboard):
+    def create_agent(agent_type, name, blackboard, kernel=None):
         mapping = {
             "recon": ReconAgent,
             "exploit": ExploitAgent,
@@ -16,6 +16,6 @@ class AgentFactory:
         
         agent_class = mapping.get(agent_type.lower())
         if agent_class:
-            return agent_class(name, blackboard)
+            return agent_class(name, blackboard, kernel=kernel)
         else:
             raise ValueError(f"Unknown agent type: {agent_type}")
