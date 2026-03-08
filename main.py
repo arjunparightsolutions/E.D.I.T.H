@@ -423,14 +423,20 @@ class EdithApp(QMainWindow):
         self.task_list.setStyleSheet("background: transparent; border: none;")
         self.card_tasks.content_layout.addWidget(self.task_list)
         
+        self.card_swarm = GlassCard("Swarm Tactical HUD")
+        self.swarm_list = QListWidget()
+        self.swarm_list.setStyleSheet("background: transparent; border: none;")
+        self.card_swarm.content_layout.addWidget(self.swarm_list)
+
         self.card_exec = GlassCard("Command Hud")
-        self.card_exec.setFixedWidth(300)
+        self.card_exec.setFixedWidth(250)
         self.exec_preview = QLabel("NO_ACTIVE_STREAM")
         self.exec_preview.setStyleSheet("color: #444; font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 800;")
         self.exec_preview.setWordWrap(True)
         self.card_exec.content_layout.addWidget(self.exec_preview)
         
         dash_grid.addWidget(self.card_tasks, stretch=3)
+        dash_grid.addWidget(self.card_swarm, stretch=3)
         dash_grid.addWidget(self.card_exec, stretch=2)
         left_pane_l.addLayout(dash_grid, stretch=2)
         
@@ -514,6 +520,10 @@ class EdithApp(QMainWindow):
         self.ai_response_ready.connect(self.post_ai_msg)
         self.task_mgr.task_updated.connect(self.sync_tasks)
         self.task_mgr.plan_updated.connect(self.plan_view.setMarkdown)
+        
+        self.swarm_timer = QTimer(self)
+        self.swarm_timer.timeout.connect(self.sync_swarm)
+        self.swarm_timer.start(1000)
 
     def boot_system(self, shell):
         self.alive = True
@@ -561,6 +571,16 @@ class EdithApp(QMainWindow):
             item.setSizeHint(widget.sizeHint())
             self.task_list.addItem(item)
             self.task_list.setItemWidget(item, widget)
+
+    def sync_swarm(self):
+        self.swarm_list.clear()
+        for aid, agent in self.agent.swarm_engine.agents.items():
+            status_text = f"[{agent.type.upper()}] {agent.name} - {'BUSY' if not agent.idle else 'IDLE'}"
+            item = QListWidgetItem()
+            widget = TaskItem(status_text, "in-progress" if not agent.idle else "todo")
+            item.setSizeHint(widget.sizeHint())
+            self.swarm_list.addItem(item)
+            self.swarm_list.setItemWidget(item, widget)
 
     def execute(self, cmd):
         self.set_agent_status("EXECUTING")

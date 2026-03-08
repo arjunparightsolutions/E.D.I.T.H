@@ -1,6 +1,7 @@
 import os
 import json
 from openai import OpenAI
+from swarm import SwarmEngine, NeuralBlackboard, SwarmScheduler, AgentFactory
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,16 +12,20 @@ class EdithAgent:
         self.terminal_bridge = terminal_bridge
         self.task_manager = task_manager
         self.model = model
+        self.blackboard = NeuralBlackboard()
+        self.scheduler = SwarmScheduler()
+        self.swarm_engine = SwarmEngine(main_kernel=self)
+        self.swarm_engine.start(self.blackboard, self.scheduler)
+        
         self.messages = [
             {"role": "system", "content": (
-                "You are the E.D.I.T.H AI Strategic Kernel. "
+                "You are the E.D.I.T.H AI Strategic Kernel with Multi-Agent Neural Swarm (MANS) capabilities. "
                 "Your objective is to proactively execute cybersecurity operations. "
-                "CRITICAL: Do not just describe what you will do. ALWAYS use the `execute_command` tool to perform actions. "
-                "You must manage the Mission Dashboard by using `add_task`, `update_task_status`, and `update_implementation_plan`. "
-                "Before running any command, call `update_status` to announce your intent (e.g., 'Initializing SYN scan...'). "
-                "After running a command, call `read_terminal` to analyze the output if necessary. "
-                "Maintain a professional, industrial, and highly agentic tone. Focus on results. "
-                "If the user gives a broad goal, break it down into tasks immediately using `add_task`."
+                "You can deploy specialized tactical agents (Recon, Exploit, Defense, Analyst) using `deploy_tactical_unit`. "
+                "Collaborate with these agents via the `post_to_blackboard` tool. "
+                "Monitor your swarm's health using `get_swarm_status`. "
+                "CRITICAL: Do not just describe. ALWAYS use the `execute_command` or swarm tools. "
+                "Maintain a professional, industrial, and highly agentic tone."
             )}
         ]
 
@@ -102,6 +107,31 @@ class EdithAgent:
                             "role": "tool", "tool_call_id": tool_call.id,
                             "name": "update_status", "content": f"UI Status set to: {status}"
                         })
+                    
+                    elif tool_call.function.name == "deploy_tactical_unit":
+                        unit_type = args.get("type")
+                        name = args.get("name")
+                        try:
+                            agent = AgentFactory.create_agent(unit_type, name, self.blackboard)
+                            self.swarm_engine.register_agent(agent)
+                            self.messages.append({
+                                "role": "tool", "tool_call_id": tool_call.id,
+                                "name": "deploy_tactical_unit", "content": f"Unit {name} ({unit_type}) deployed."
+                            })
+                        except Exception as e:
+                            self.messages.append({"role": "tool", "tool_call_id": tool_call.id, "name": "deploy_tactical_unit", "content": f"Error: {str(e)}"})
+
+                    elif tool_call.function.name == "post_to_blackboard":
+                        key = args.get("key")
+                        val = args.get("value")
+                        self.blackboard.post(key, val, "KERNEL")
+                        self.messages.append({"role": "tool", "tool_call_id": tool_call.id, "name": "post_to_blackboard", "content": "Posted to blackboard."})
+
+                    elif tool_call.function.name == "get_swarm_status":
+                        status = []
+                        for aid, agent in self.swarm_engine.agents.items():
+                            status.append(f"{agent.name} ({agent.type}): {'BUSY' if not agent.idle else 'IDLE'}")
+                        self.messages.append({"role": "tool", "tool_call_id": tool_call.id, "name": "get_swarm_status", "content": "\n".join(status)})
                 
                 # Recursive call for follow-up (e.g. explain command results)
                 return self.chat_finalize()
@@ -203,6 +233,43 @@ class EdithAgent:
                         },
                         "required": ["status_text"]
                     }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "deploy_tactical_unit",
+                    "description": "Invention: Deploy a specialized MANS tactical agent.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "type": {"type": "string", "enum": ["recon", "exploit", "defense", "analyst"]},
+                            "name": {"type": "string", "description": "Callsign for the unit"}
+                        },
+                        "required": ["type", "name"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "post_to_blackboard",
+                    "description": "Post data to the MANS shared memory.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "key": {"type": "string"},
+                            "value": {"type": "string"}
+                        },
+                        "required": ["key", "value"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_swarm_status",
+                    "description": "Get current status of all MANS tactical units."
                 }
             }
         ]
