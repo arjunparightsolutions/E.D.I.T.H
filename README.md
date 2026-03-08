@@ -1,19 +1,21 @@
-# E.D.I.T.H Titan: Advanced Neural Tactical Hub
+# E.D.I.T.H Zenith: Ultimate Neural Tactical Hub 🏁
 
 E.D.I.T.H (Enhanced Deployment Information & Tactical Hub) is a professional, industrial-grade agentic cybersecurity kernel. It features an **Apex UI** with premium glassmorphism, pulsing neural indicators, and a proactive AI strategist.
 
 ![E.D.I.T.H Apex Interface](https://via.placeholder.com/800x450.png?text=E.D.I.T.H+Apex+Cyberdeck)
 
-## ⚡ Titan Professional Features
+## ⚡ Zenith Grade Professional Features
 
-- **Titan UI Update**: Extreme professional refinement with a **24px precision grid**, Glassmorphism V2, and high-contrast glowing borders.
-- **Advanced Tactical Toolkit (ATT)**: 10 new specialized modules for ethical hackers:
-  - **Payload Gen**: Professional reverse-shell generation.
-  - **Visual Net-Map**: Interactive graphical representation of network nodes.
-  - **CVE lookup**: Local vulnerability database search.
-  - **Packet Sniffer**: Live traffic analysis interface.
-  - **Encoder/Scanner/Reporter**: Pro-grade utility suite.
+- **Zenith BIOS Boot loader**: High-tech "Kernel Initialization" sequence with pulse indicators and progress tracking.
+- **Real-Time Visual Analytics**: Dynamic **Neural Heatmaps** and **Kernel Stream** visualizers for industrial data monitoring.
+- **Tactical Quick-Action HUD**: Floating shortcut bar for one-click access to essential ethical hacking commands.
+- **Titan UI Update**: Extreme professional refinement with a **24px precision grid** and Zenon neon-glow aesthetics.
+- **Advanced Tactical Toolkit (ATT)**: 10 specialized modules including Payload Gen, Visual Net-Map, and CVE Search.
 - **MANS Invention (Multi-Agent Neural Swarm)**: Decentralized framework for deploying specialized AI tactical units.
+
+## 📖 Strategic Documentation
+- **[Field Manual](./docs/FIELD_MANUAL.md)**: Operational guide for ethical hackers.
+- **[Tactical Guide](./docs/TACTICAL_GUIDE.md)**: Technical architecture and MANS/ATT breakdown.
 - **Pulsing Status Indicators**: Real-time visual feedback for terminal, kernel, and strategic bridge states.
 - **Interactive Tactical Terminal**: Zero-lag, high-performance terminal supporting PowerShell and WSL kernels.
 - **Command Intent HUD**: A syntax-highlighted preview of AI's proactive terminal intents.
