@@ -1,15 +1,19 @@
-# E.D.I.T.H Apex: Neural Tactical Cybersecurity OS
+# E.D.I.T.H Titan: Advanced Neural Tactical Hub
 
 E.D.I.T.H (Enhanced Deployment Information & Tactical Hub) is a professional, industrial-grade agentic cybersecurity kernel. It features an **Apex UI** with premium glassmorphism, pulsing neural indicators, and a proactive AI strategist.
 
 ![E.D.I.T.H Apex Interface](https://via.placeholder.com/800x450.png?text=E.D.I.T.H+Apex+Cyberdeck)
 
-## ⚡ Apex Professional Features
+## ⚡ Titan Professional Features
 
-- **MANS Invention (Multi-Agent Neural Swarm)**: A decentralized framework of **15 specialized Python modules** enabling E.D.I.T.H to deploy semi-autonomous tactical units (Recon, Exploit, Defense, Analyst).
-- **Neural Blackboard**: A shared agent-to-agent memory space for seamless mission coordination.
-- **Apex Glassmorphism UI**: Translucent neural cards with glowing 1px neon-blue borders.
-- **Swarm Tactical HUD**: Real-time visual monitoring of all active agent units and their primary directives.
+- **Titan UI Update**: Extreme professional refinement with a **24px precision grid**, Glassmorphism V2, and high-contrast glowing borders.
+- **Advanced Tactical Toolkit (ATT)**: 10 new specialized modules for ethical hackers:
+  - **Payload Gen**: Professional reverse-shell generation.
+  - **Visual Net-Map**: Interactive graphical representation of network nodes.
+  - **CVE lookup**: Local vulnerability database search.
+  - **Packet Sniffer**: Live traffic analysis interface.
+  - **Encoder/Scanner/Reporter**: Pro-grade utility suite.
+- **MANS Invention (Multi-Agent Neural Swarm)**: Decentralized framework for deploying specialized AI tactical units.
 - **Pulsing Status Indicators**: Real-time visual feedback for terminal, kernel, and strategic bridge states.
 - **Interactive Tactical Terminal**: Zero-lag, high-performance terminal supporting PowerShell and WSL kernels.
 - **Command Intent HUD**: A syntax-highlighted preview of AI's proactive terminal intents.

@@ -2,6 +2,7 @@ import os
 import json
 from openai import OpenAI
 from swarm import SwarmEngine, NeuralBlackboard, SwarmScheduler, AgentFactory
+from toolkit import ToolkitBridge
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -16,16 +17,16 @@ class EdithAgent:
         self.scheduler = SwarmScheduler()
         self.swarm_engine = SwarmEngine(main_kernel=self)
         self.swarm_engine.start(self.blackboard, self.scheduler)
+        self.toolkit = ToolkitBridge(terminal=self)
         
         self.messages = [
             {"role": "system", "content": (
-                "You are the E.D.I.T.H AI Strategic Kernel with Multi-Agent Neural Swarm (MANS) capabilities. "
-                "Your objective is to proactively execute cybersecurity operations. "
-                "You can deploy specialized tactical agents (Recon, Exploit, Defense, Analyst) using `deploy_tactical_unit`. "
-                "Collaborate with these agents via the `post_to_blackboard` tool. "
-                "Monitor your swarm's health using `get_swarm_status`. "
-                "CRITICAL: Do not just describe. ALWAYS use the `execute_command` or swarm tools. "
-                "Maintain a professional, industrial, and highly agentic tone."
+                "You are the E.D.I.T.H Titan AI Strategic Kernel. "
+                "You have access to the Multi-Agent Neural Swarm (MANS) and the Advanced Tactical Toolkit (ATT). "
+                "Your objective is to proactively execute cybersecurity operations with pixel-perfect precision. "
+                "You can deploy specialized units, generate payloads, perform CVE lookups, and build professional mission reports. "
+                "CRITICAL: Always prefer action (tool calls) over description. "
+                "Maintain a professional, industrial, and high-authority tone."
             )}
         ]
 
@@ -132,6 +133,26 @@ class EdithAgent:
                         for aid, agent in self.swarm_engine.agents.items():
                             status.append(f"{agent.name} ({agent.type}): {'BUSY' if not agent.idle else 'IDLE'}")
                         self.messages.append({"role": "tool", "tool_call_id": tool_call.id, "name": "get_swarm_status", "content": "\n".join(status)})
+
+                    elif tool_call.function.name == "generate_payload":
+                        res = self.toolkit.handle_request("payload", args.get("p_type"), args.get("ip"), args.get("port"))
+                        self.messages.append({"role": "tool", "tool_call_id": tool_call.id, "name": "generate_payload", "content": res})
+
+                    elif tool_call.function.name == "cve_lookup":
+                        res = self.toolkit.handle_request("cve", args.get("query"))
+                        self.messages.append({"role": "tool", "tool_call_id": tool_call.id, "name": "cve_lookup", "content": json.dumps(res)})
+
+                    elif tool_call.function.name == "advanced_encode":
+                        res = self.toolkit.handle_request("encode", args.get("data"), args.get("e_type"))
+                        self.messages.append({"role": "tool", "tool_call_id": tool_call.id, "name": "advanced_encode", "content": res})
+
+                    elif tool_call.function.name == "generate_mission_report":
+                        report = self.toolkit.handle_request("report", args.get("mission_name"), args.get("findings"))
+                        self.messages.append({"role": "tool", "tool_call_id": tool_call.id, "name": "generate_mission_report", "content": "Report generated in buffer."})
+                        # Also add a fake task for the user to see the report
+                        if self.task_manager:
+                            self.task_manager.add_task(f"MISSION_REPORT: {args.get('mission_name')}")
+                            self.task_manager.update_task_status(len(self.task_manager.tasks)-1, "done")
                 
                 # Recursive call for follow-up (e.g. explain command results)
                 return self.chat_finalize()
@@ -270,6 +291,66 @@ class EdithAgent:
                 "function": {
                     "name": "get_swarm_status",
                     "description": "Get current status of all MANS tactical units."
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "generate_payload",
+                    "description": "Titan Toolkit: Generate a professional reverse shell payload.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "p_type": {"type": "string", "enum": ["powershell_rev", "bash_rev", "python_rev"]},
+                            "ip": {"type": "string"},
+                            "port": {"type": "integer"}
+                        },
+                        "required": ["p_type", "ip", "port"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "cve_lookup",
+                    "description": "Titan Toolkit: Search local CVE database for vulnerabilities.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "query": {"type": "string", "description": "CVE ID or keyword"}
+                        },
+                        "required": ["query"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "advanced_encode",
+                    "description": "Titan Toolkit: Encode data (Base64, Hex, URL, Binary).",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "data": {"type": "string"},
+                            "e_type": {"type": "string", "enum": ["base64", "hex", "url", "binary"]}
+                        },
+                        "required": ["data", "e_type"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "generate_mission_report",
+                    "description": "Titan Toolkit: Compile findings into a professional mission report.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "mission_name": {"type": "string"},
+                            "findings": {"type": "object", "description": "Key-value pair of findings."}
+                        },
+                        "required": ["mission_name", "findings"]
+                    }
                 }
             }
         ]

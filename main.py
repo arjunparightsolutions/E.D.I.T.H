@@ -20,93 +20,85 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# --- APEX PROFESSIONAL DESIGN SYSTEM ---
+# --- TITAN PROFESSIONAL DESIGN SYSTEM (24px Grid) ---
 
 STYLESHEET = """
 QMainWindow {
-    background-color: #0A0A0B;
+    background-color: #080809;
 }
 
 #Sidebar {
-    background-color: #0F0F11;
-    border-right: 1px solid #1E1E22;
-    min-width: 80px;
-    max-width: 80px;
+    background-color: #0B0B0D;
+    border-right: 1px solid #1A1A1E;
+    min-width: 90px;
+    max-width: 90px;
 }
 
 #TopToolbar {
-    background-color: #0F0F11;
-    border-bottom: 1px solid #1E1E22;
-    min-height: 65px;
+    background-color: #0B0B0D;
+    border-bottom: 1px solid #1A1A1E;
+    min-height: 75px;
 }
 
 #DashboardCard {
-    background-color: rgba(30, 30, 35, 0.4);
-    border: 1px solid #2A2A30;
-    border-radius: 12px;
+    background-color: rgba(22, 22, 26, 0.6);
+    border: 1px solid rgba(0, 163, 255, 0.15);
+    border-radius: 16px;
+}
+
+#DashboardCard:hover {
+    border: 1px solid rgba(0, 163, 255, 0.4);
 }
 
 #DashboardTitle {
     color: #4A4A50;
     font-weight: 800;
-    font-size: 9px;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
 }
 
 #StatusBadge {
-    background-color: rgba(0, 163, 255, 0.1);
-    color: #00A3FF;
-    padding: 6px 12px;
-    border: 1px solid rgba(0, 163, 255, 0.3);
-    border-radius: 6px;
-    font-size: 10px;
-    font-weight: 700;
-    font-family: 'Inter', sans-serif;
+    background-color: rgba(0, 255, 65, 0.05);
+    color: #00FF41;
+    padding: 8px 16px;
+    border: 1px solid rgba(0, 255, 65, 0.2);
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono';
 }
 
 #ChatInput {
-    background-color: #1A1A1D;
+    background-color: #121215;
     color: #FFFFFF;
-    border: 1px solid #2A2A30;
-    border-radius: 8px;
-    padding: 14px;
-    font-size: 13px;
+    border: 1px solid #1A1A1E;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 14px;
     font-family: 'Inter', sans-serif;
 }
 
 #ChatInput:focus {
     border: 1px solid #00A3FF;
-    background-color: #1E1E22;
+    background-color: #16161A;
 }
 
 #TerminalContainer {
-    background-color: #050506;
-    border: 1px solid #1E1E22;
-    border-radius: 12px;
+    background-color: #030304;
+    border: 1px solid #1A1A1E;
+    border-radius: 16px;
 }
 
 QScrollBar:vertical {
     border: none;
     background: transparent;
-    width: 6px;
+    width: 4px;
 }
 
 QScrollBar::handle:vertical {
-    background: #2A2A30;
-    min-height: 30px;
-    border-radius: 3px;
-}
-
-QProgressBar {
-    border: none;
-    background-color: #1E1E22;
-    height: 4px;
-    border-radius: 2px;
-}
-
-QProgressBar::chunk {
-    background-color: #00A3FF;
+    background: #1A1A1E;
+    min-height: 40px;
     border-radius: 2px;
 }
 """
@@ -116,7 +108,7 @@ class GlassCard(QFrame):
         super().__init__(parent)
         self.setObjectName("DashboardCard")
         self.layout = QVBoxLayout(self)
-        self.layout.setContentsMargins(20, 20, 20, 20)
+        self.layout.setContentsMargins(24, 24, 24, 24)
         
         self.title_label = QLabel(title.upper())
         self.title_label.setObjectName("DashboardTitle")
@@ -129,22 +121,22 @@ class GlassCard(QFrame):
 class PulseIndicator(QWidget):
     def __init__(self, color="#00A3FF", parent=None):
         super().__init__(parent)
-        self.setFixedSize(12, 12)
+        self.setFixedSize(14, 14)
         self.color = QColor(color)
         self.alpha = 255
         self.growing = False
         
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_pulse)
-        self.timer.start(50)
+        self.timer.start(40)
 
     def update_pulse(self):
         if self.growing:
-            self.alpha += 10
+            self.alpha += 8
             if self.alpha >= 255: self.growing = False
         else:
-            self.alpha -= 10
-            if self.alpha <= 50: self.growing = True
+            self.alpha -= 8
+            if self.alpha <= 40: self.growing = True
         self.update()
 
     def paintEvent(self, event):
@@ -154,23 +146,23 @@ class PulseIndicator(QWidget):
         c.setAlpha(self.alpha)
         painter.setBrush(QBrush(c))
         painter.setPen(Qt.PenStyle.NoPen)
-        painter.drawEllipse(2, 2, 8, 8)
+        painter.drawEllipse(3, 3, 8, 8)
 
 class SideNavButton(QPushButton):
     def __init__(self, icon_text, label, parent=None):
         super().__init__(parent)
-        self.setFixedSize(80, 85)
+        self.setFixedSize(90, 95)
         self.setCheckable(True)
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 12, 0, 12)
-        layout.setSpacing(4)
+        layout.setContentsMargins(0, 16, 0, 16)
+        layout.setSpacing(6)
         
         self.icon_lbl = QLabel(icon_text)
-        self.icon_lbl.setStyleSheet("font-size: 22px; color: inherit;")
+        self.icon_lbl.setStyleSheet("font-size: 24px; color: inherit;")
         self.icon_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
         self.text_lbl = QLabel(label.upper())
-        self.text_lbl.setStyleSheet("font-size: 9px; color: inherit; font-weight: 800; letter-spacing: 1.2px;")
+        self.text_lbl.setStyleSheet("font-size: 9px; color: inherit; font-weight: 900; letter-spacing: 2px;")
         self.text_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
         layout.addWidget(self.icon_lbl)
@@ -181,21 +173,21 @@ class SideNavButton(QPushButton):
 
     def update_style(self):
         if self.isChecked():
-            self.setStyleSheet("background-color: #1A1A1D; color: #00A3FF; border-right: 2px solid #00A3FF;")
+            self.setStyleSheet("background-color: #121215; color: #00A3FF; border-right: 3px solid #00A3FF;")
         else:
-            self.setStyleSheet("background-color: transparent; color: #55555B; border: none;")
+            self.setStyleSheet("background-color: transparent; color: #3A3A40; border: none;")
 
 class TaskItem(QWidget):
     def __init__(self, title, status, parent=None):
         super().__init__(parent)
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(0, 8, 0, 8)
+        layout.setContentsMargins(0, 10, 0, 10)
         
-        dot = PulseIndicator("#00A3FF" if status == "in-progress" else "#50FA7B" if status == "done" else "#333338")
+        dot = PulseIndicator("#00A3FF" if status == "in-progress" else "#00FF41" if status == "done" else "#1A1A1E")
         layout.addWidget(dot)
         
         self.label = QLabel(title)
-        self.label.setStyleSheet(f"color: {'#E0E0E6' if status != 'done' else '#55555B'}; font-size: 13px; font-weight: 500;")
+        self.label.setStyleSheet(f"color: {'#DDD' if status != 'done' else '#444'}; font-size: 13px; font-weight: 600; font-family: 'Inter';")
         layout.addWidget(self.label)
         layout.addStretch()
 
@@ -210,28 +202,28 @@ class ChatBubble(QFrame):
         if is_ai:
             self.setStyleSheet("""
                 ChatBubble {
-                    background-color: rgba(0, 163, 255, 0.05);
-                    border-radius: 12px;
+                    background-color: rgba(0, 163, 255, 0.03);
+                    border-radius: 16px;
                     border: 1px solid rgba(0, 163, 255, 0.1);
-                    margin-right: 60px;
-                    padding: 15px;
+                    margin-right: 80px;
+                    padding: 20px;
                 }
-                QLabel { color: #BBB; font-size: 14px; line-height: 1.5; font-family: 'Inter'; }
+                QLabel { color: #AAA; font-size: 14px; line-height: 1.6; font-family: 'Inter'; }
             """)
         else:
             self.setStyleSheet("""
                 ChatBubble {
-                    background-color: #1E1E22;
-                    border-radius: 12px;
-                    margin-left: 60px;
-                    padding: 15px;
-                    border: 1px solid #2A2A30;
+                    background-color: #16161A;
+                    border-radius: 16px;
+                    margin-left: 80px;
+                    padding: 20px;
+                    border: 1px solid #1A1A1E;
                 }
-                QLabel { color: #FFF; font-size: 14px; font-family: 'Inter'; }
+                QLabel { color: #F0F0F0; font-size: 14px; font-family: 'Inter'; }
             """)
         layout.addWidget(self.label)
 
-# --- APEX TERMINAL WIDGET ---
+# --- TITAN TERMINAL WIDGET ---
 
 class TerminalWidget(QPlainTextEdit):
     key_pressed = pyqtSignal(str)
@@ -240,7 +232,7 @@ class TerminalWidget(QPlainTextEdit):
         super().__init__(parent)
         self.setReadOnly(False)
         self.setFont(QFont("JetBrains Mono", 10))
-        self.setStyleSheet("background-color: #050506; color: #00FF41; border: none; padding: 20px;")
+        self.setStyleSheet("background-color: #030304; color: #00FF41; border: none; padding: 24px;")
         self.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap)
         self.setUndoRedoEnabled(False)
         self.setCursorWidth(2)
@@ -290,7 +282,7 @@ class TerminalWidget(QPlainTextEdit):
         for _ in range(self.screen.cursor.x): cursor.movePosition(QTextCursor.MoveOperation.Right)
         self.setTextCursor(cursor)
 
-# --- APEX MAIN OS ---
+# --- TITAN MAIN KERNEL ---
 
 class EdithApp(QMainWindow):
     data_received = pyqtSignal(str)
@@ -298,8 +290,8 @@ class EdithApp(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("E.D.I.T.H Apex - Tactical OS")
-        self.resize(1700, 1000)
+        self.setWindowTitle("E.D.I.T.H Titan - Tactical OS")
+        self.resize(1800, 1100)
         self.setStyleSheet(STYLESHEET)
         
         self.task_mgr = TaskManager()
@@ -325,7 +317,7 @@ class EdithApp(QMainWindow):
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
         
-        # --- 1. PREMIUM SIDE NAV ---
+        # --- 1. TITAN SIDE NAV ---
         self.sidebar = QFrame()
         self.sidebar.setObjectName("Sidebar")
         sidebar_layout = QVBoxLayout(self.sidebar)
@@ -334,21 +326,22 @@ class EdithApp(QMainWindow):
         
         self.btn_dash = SideNavButton("📊", "Dash")
         self.btn_term = SideNavButton("⌨️", "Term")
-        self.btn_sett = SideNavButton("⚙️", "Config")
+        self.btn_toolkit = SideNavButton("🛠️", "ATT")
         self.btn_dash.setChecked(True)
         
         sidebar_layout.addWidget(self.btn_dash)
         sidebar_layout.addWidget(self.btn_term)
+        sidebar_layout.addWidget(self.btn_toolkit)
         sidebar_layout.addStretch()
         
-        # Kernel Status Footer
+        # Kernel Status Footer (Pulse Indicator)
         kernel_footer = QVBoxLayout()
-        kernel_footer.setContentsMargins(0, 0, 0, 20)
-        kernel_footer.setSpacing(5)
-        self.pulse = PulseIndicator("#333338")
+        kernel_footer.setContentsMargins(0, 0, 0, 30)
+        kernel_footer.setSpacing(8)
+        self.pulse = PulseIndicator("#1A1A1E")
         kernel_footer.addWidget(self.pulse, alignment=Qt.AlignmentFlag.AlignCenter)
-        lbl = QLabel("KERNEL")
-        lbl.setStyleSheet("font-size: 7px; color: #444; font-weight: 800; letter-spacing: 1px;")
+        lbl = QLabel("TITAN_V2")
+        lbl.setStyleSheet("font-size: 8px; color: #333; font-weight: 900; letter-spacing: 2px;")
         kernel_footer.addWidget(lbl, alignment=Qt.AlignmentFlag.AlignCenter)
         sidebar_layout.addLayout(kernel_footer)
         
@@ -359,43 +352,24 @@ class EdithApp(QMainWindow):
         workspace.setContentsMargins(0, 0, 0, 0)
         workspace.setSpacing(0)
         
-        # Apex Header
+        # Titan Header
         header = QFrame()
         header.setObjectName("TopToolbar")
         header_l = QHBoxLayout(header)
-        header_l.setContentsMargins(30, 0, 30, 0)
+        header_l.setContentsMargins(35, 0, 35, 0)
         
         title_box = QVBoxLayout()
-        title_box.setSpacing(0)
+        title_box.setSpacing(2)
         title_box.setAlignment(Qt.AlignmentFlag.AlignVCenter)
-        logo = QLabel("E.D.I.T.H // APEX_KERNEL")
-        logo.setStyleSheet("color: #FFFFFF; font-weight: 900; font-size: 16px; letter-spacing: 3px;")
-        sub_logo = QLabel("NEURAL TACTICAL DEPLOYMENT V2.1")
-        sub_logo.setStyleSheet("color: #00A3FF; font-weight: 800; font-size: 8px; letter-spacing: 4px;")
+        logo = QLabel("E.D.I.T.H // TITAN_TACTICAL")
+        logo.setStyleSheet("color: #FFFFFF; font-weight: 900; font-size: 18px; letter-spacing: 4px;")
+        sub_logo = QLabel("ADVANCED AGENTIC DEPLOYMENT // GRID_2.5")
+        sub_logo.setStyleSheet("color: #00A3FF; font-weight: 800; font-size: 9px; letter-spacing: 5px;")
         title_box.addWidget(logo)
         title_box.addWidget(sub_logo)
         header_l.addLayout(title_box)
         
         header_l.addStretch()
-        
-        self.auto_exec_btn = QPushButton("AUTO-EXEC: ON")
-        self.auto_exec_btn.setCheckable(True)
-        self.auto_exec_btn.setChecked(True)
-        self.auto_exec_btn.setFixedSize(140, 32)
-        self.auto_exec_btn.setStyleSheet("""
-            QPushButton { background-color: #1E1E22; color: #50FA7B; border: 1px solid #2A2A30; border-radius: 6px; font-weight: 800; font-size: 10px; }
-            QPushButton:checked { background-color: rgba(80, 250, 123, 0.1); border: 1px solid #50FA7B; }
-            QPushButton:!checked { background-color: rgba(255, 85, 85, 0.1); color: #FF5555; border: 1px solid #FF5555; }
-        """)
-        self.auto_exec_btn.toggled.connect(lambda c: self.auto_exec_btn.setText("AUTO-EXEC: ON" if c else "AUTO-EXEC: OFF"))
-        header_l.addWidget(self.auto_exec_btn)
-
-        self.model_box = QComboBox()
-        self.model_box.addItems(["gpt-4o", "gpt-4o-mini"])
-        self.model_box.setFixedSize(120, 32)
-        self.model_box.setStyleSheet("background-color: #1A1A1D; color: #E0E0E6; border: 1px solid #2A2A30; padding: 0 10px; border-radius: 6px; font-size: 11px;")
-        header_l.addWidget(QLabel("MODEL:", styleSheet="color: #444; font-size: 9px; margin-left: 20px; font-weight: 800;"))
-        header_l.addWidget(self.model_box)
         
         self.status_badge = QLabel("OFFLINE")
         self.status_badge.setObjectName("StatusBadge")
@@ -406,41 +380,33 @@ class EdithApp(QMainWindow):
         # Primary Workspace Splitter
         self.splitter = QSplitter(Qt.Orientation.Horizontal)
         self.splitter.setHandleWidth(1)
-        self.splitter.setStyleSheet("QSplitter::handle { background: #1E1E22; }")
+        self.splitter.setStyleSheet("QSplitter::handle { background: #1A1A1E; }")
         
         # --- LEFT: MISSION & STRATEGY ---
         left_pane = QWidget()
         left_pane_l = QVBoxLayout(left_pane)
-        left_pane_l.setContentsMargins(30, 30, 15, 30)
-        left_pane_l.setSpacing(25)
+        left_pane_l.setContentsMargins(35, 35, 17, 35)
+        left_pane_l.setSpacing(30)
         
-        # Top Row Dash
+        # Top Row Dash (Swarm + Tasks)
         dash_grid = QHBoxLayout()
-        dash_grid.setSpacing(20)
+        dash_grid.setSpacing(24)
         
         self.card_tasks = GlassCard("Tactical Objectives")
         self.task_list = QListWidget()
         self.task_list.setStyleSheet("background: transparent; border: none;")
         self.card_tasks.content_layout.addWidget(self.task_list)
         
-        self.card_swarm = GlassCard("Swarm Tactical HUD")
+        self.card_swarm = GlassCard("Swarm Hub")
         self.swarm_list = QListWidget()
         self.swarm_list.setStyleSheet("background: transparent; border: none;")
         self.card_swarm.content_layout.addWidget(self.swarm_list)
-
-        self.card_exec = GlassCard("Command Hud")
-        self.card_exec.setFixedWidth(250)
-        self.exec_preview = QLabel("NO_ACTIVE_STREAM")
-        self.exec_preview.setStyleSheet("color: #444; font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 800;")
-        self.exec_preview.setWordWrap(True)
-        self.card_exec.content_layout.addWidget(self.exec_preview)
         
-        dash_grid.addWidget(self.card_tasks, stretch=3)
-        dash_grid.addWidget(self.card_swarm, stretch=3)
-        dash_grid.addWidget(self.card_exec, stretch=2)
+        dash_grid.addWidget(self.card_tasks, stretch=1)
+        dash_grid.addWidget(self.card_swarm, stretch=1)
         left_pane_l.addLayout(dash_grid, stretch=2)
         
-        # AI Thread
+        # AI Strategist Thread
         chat_card = GlassCard("Strategic Neural Bridge")
         cv = QVBoxLayout()
         self.chat_scroll = QScrollArea()
@@ -453,30 +419,29 @@ class EdithApp(QMainWindow):
         self.chat_scroll.setWidget(self.chat_inner)
         cv.addWidget(self.chat_scroll)
         
-        input_container = QHBoxLayout()
         self.chat_input = QLineEdit()
         self.chat_input.setObjectName("ChatInput")
-        self.chat_input.setPlaceholderText("Broadcast Mission objective...")
+        self.chat_input.setPlaceholderText("Broadcast Titan Directive...")
         self.chat_input.returnPressed.connect(self.handle_chat)
-        input_container.addWidget(self.chat_input)
+        cv.addWidget(self.chat_input)
         
-        cv.addLayout(input_container)
         chat_card.content_layout.addLayout(cv)
         left_pane_l.addWidget(chat_card, stretch=5)
         
         # --- RIGHT: DEPLOYMENT & LOGS ---
         right_pane = QWidget()
         right_pane_l = QVBoxLayout(right_pane)
-        right_pane_l.setContentsMargins(15, 30, 30, 30)
-        right_pane_l.setSpacing(25)
+        right_pane_l.setContentsMargins(17, 35, 35, 35)
+        right_pane_l.setSpacing(30)
         
-        # Strategy View
-        plan_card = GlassCard("Deployment Blueprint")
-        plan_card.setFixedHeight(250)
-        self.plan_view = QTextBrowser()
-        self.plan_view.setStyleSheet("background: transparent; border: none; color: #AAA; font-size: 12px; line-height: 1.6;")
-        plan_card.content_layout.addWidget(self.plan_view)
-        right_pane_l.addWidget(plan_card)
+        # Command HUD
+        hud_card = GlassCard("Command Hud")
+        hud_card.setFixedHeight(240)
+        self.exec_preview = QLabel("NO_ACTIVE_INTENT")
+        self.exec_preview.setStyleSheet("color: #444; font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 900;")
+        self.exec_preview.setWordWrap(True)
+        hud_card.content_layout.addWidget(self.exec_preview)
+        right_pane_l.addWidget(hud_card)
         
         # Terminal Pane
         term_frame = QFrame()
@@ -485,19 +450,14 @@ class EdithApp(QMainWindow):
         term_layout.setContentsMargins(0, 0, 0, 0)
         
         term_header = QFrame()
-        term_header.setFixedHeight(40)
-        term_header.setStyleSheet("background-color: #0F0F11; border-bottom: 1px solid #1E1E22;")
+        term_header.setFixedHeight(50)
+        term_header.setStyleSheet("background-color: #0B0B0D; border-bottom: 1px solid #1A1A1E;")
         tl = QHBoxLayout(term_header)
-        tl.setContentsMargins(20, 0, 20, 0)
-        
-        term_ico = QLabel("⌨️")
-        term_ico.setStyleSheet("font-size: 14px;")
-        tl.addWidget(term_ico)
-        tl.addWidget(QLabel("TACTICAL_KERNAL_THREAD", styleSheet="color: #666; font-size: 10px; font-weight: 900; letter-spacing: 1px;"))
+        tl.setContentsMargins(24, 0, 24, 0)
+        tl.addWidget(QLabel("⌨️ TITAN_CORE_PTY", styleSheet="color: #666; font-size: 11px; font-weight: 900; letter-spacing: 2px;"))
         tl.addStretch()
-        
         self.agent_status = QLabel("IDLE")
-        self.agent_status.setStyleSheet("color: #00A3FF; font-size: 10px; font-weight: 900; background: rgba(0, 163, 255, 0.1); padding: 4px 8px; border-radius: 4px;")
+        self.agent_status.setStyleSheet("color: #00FF41; font-size: 10px; font-weight: 900; background: rgba(0, 255, 65, 0.05); padding: 5px 12px; border-radius: 6px;")
         tl.addWidget(self.agent_status)
         term_layout.addWidget(term_header)
         
@@ -519,7 +479,7 @@ class EdithApp(QMainWindow):
         self.data_received.connect(self.terminal.stream.feed)
         self.ai_response_ready.connect(self.post_ai_msg)
         self.task_mgr.task_updated.connect(self.sync_tasks)
-        self.task_mgr.plan_updated.connect(self.plan_view.setMarkdown)
+        self.task_mgr.plan_updated.connect(lambda p: None) # Ignore for now
         
         self.swarm_timer = QTimer(self)
         self.swarm_timer.timeout.connect(self.sync_swarm)
@@ -527,15 +487,15 @@ class EdithApp(QMainWindow):
 
     def boot_system(self, shell):
         self.alive = True
-        self.status_badge.setText(f"KERNEL: {shell.upper()}")
-        self.status_badge.setStyleSheet("background-color: #00A3FF; color: black; font-weight: 800; border-radius: 6px; padding: 6px 15px;")
-        self.pulse.color = QColor("#00A3FF")
+        self.status_badge.setText(f"TITAN_LOADED: {shell.upper()}")
+        self.status_badge.setStyleSheet("background-color: rgba(0, 255, 65, 0.1); color: #00FF41; border: 1px solid #00FF41;")
+        self.pulse.color = QColor("#00FF41")
         try:
             cmd = "powershell.exe" if shell == "powershell" else "wsl.exe"
             self.pty = PtyProcess.spawn(cmd, dimensions=(self.terminal.rows, self.terminal.cols))
             threading.Thread(target=self.read_pty, daemon=True).start()
             self.stack.setCurrentIndex(1)
-            self.post_ai_msg("Neural bridge synchronized. Kernel online. Ready for tactical directives.")
+            self.post_ai_msg("Titan Neural Kernel synchronized. Advanced Tactical Toolkit online. Ready for directive.")
         except Exception as e:
             QMessageBox.critical(self, "Boot Failure", str(e))
 
@@ -553,10 +513,7 @@ class EdithApp(QMainWindow):
 
     def set_agent_status(self, text):
         self.agent_status.setText(text.upper())
-        if text.upper() in ["EXECUTING", "STRATEGIZING"]:
-            self.pulse.color = QColor("#FF5555" if "EXEC" in text.upper() else "#00A3FF")
-        else:
-            self.pulse.color = QColor("#00A3FF")
+        self.pulse.color = QColor("#00A3FF" if text == "READY" else "#00FF41" if "EXEC" in text else "#FFDD00")
 
     def add_bubble(self, text, is_ai):
         self.chat_vbox.addWidget(ChatBubble(text, is_ai))
@@ -575,7 +532,7 @@ class EdithApp(QMainWindow):
     def sync_swarm(self):
         self.swarm_list.clear()
         for aid, agent in self.agent.swarm_engine.agents.items():
-            status_text = f"[{agent.type.upper()}] {agent.name} - {'BUSY' if not agent.idle else 'IDLE'}"
+            status_text = f"[{agent.type.upper()}] {agent.name}"
             item = QListWidgetItem()
             widget = TaskItem(status_text, "in-progress" if not agent.idle else "todo")
             item.setSizeHint(widget.sizeHint())
@@ -585,16 +542,10 @@ class EdithApp(QMainWindow):
     def execute(self, cmd):
         self.set_agent_status("EXECUTING")
         self.exec_preview.setText(f"> {cmd}")
-        self.exec_preview.setStyleSheet("color: #00FF41; font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 800;")
-        
-        if self.auto_exec_btn.isChecked():
-            self.send_to_pty(cmd + "\r\n")
-            time.sleep(2.0)
-            self.set_agent_status("ANALYZING")
-            return self.get_screen()
-        else:
-            self.set_agent_status("WAITING_AUTH")
-            return "AUTO-EXEC DISABLED. MANUAL OVERRIDE REQUIRED."
+        self.exec_preview.setStyleSheet("color: #00FF41; font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 900;")
+        self.send_to_pty(cmd + "\r\n")
+        time.sleep(1.5)
+        return self.get_screen()
 
     def get_screen(self): 
         lines = ["".join(self.terminal.screen.buffer[row][col].data for col in range(self.terminal.screen.columns))
