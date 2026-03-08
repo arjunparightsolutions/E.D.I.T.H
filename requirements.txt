@@ -1,0 +1,6 @@
+PyQt6
+pywinpty
+pyte
+qdarktheme
+openai
+python-dotenv
